@@ -1,646 +1,318 @@
-<!-- index.html -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Hoster</title>
+
 <style>
 :root{
-  --bg:#0b0b10;
-  --panel:#12121a;
-  --panel2:#171722;
-  --text:#f4f4f7;
-  --muted:#a7a7b6;
-  --line:#262637;
-  --accent:#ffffff;
-  --accentText:#0b0b10;
-  --chip:#1d1d2a;
+  --bg:#070A12;
+  --panel:rgba(255,255,255,0.06);
+  --panel2:rgba(255,255,255,0.09);
+  --text:#EDEDF3;
+  --muted:#9AA3B2;
+  --border:rgba(255,255,255,0.10);
+  --accent:#7C5CFF;
+  --accent2:#22D3EE;
+  --shadow: 0 20px 60px rgba(0,0,0,0.6);
 }
-:root.light{
-  --bg:#f4f6fb;
-  --panel:#ffffff;
-  --panel2:#eef1f7;
-  --text:#12131a;
-  --muted:#60637a;
-  --line:#d8dced;
-  --accent:#12131a;
-  --accentText:#ffffff;
-  --chip:#e8ebf4;
-}
+
 *{box-sizing:border-box}
-html,body{margin:0;height:100%}
 body{
-  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:var(--bg);
+  margin:0;
+  font-family: ui-sans-serif, system-ui;
+  background:
+    radial-gradient(1000px 500px at 20% 10%, rgba(124,92,255,0.25), transparent),
+    radial-gradient(800px 400px at 80% 20%, rgba(34,211,238,0.18), transparent),
+    var(--bg);
   color:var(--text);
 }
-a{color:inherit}
-button,input,textarea,select{font:inherit}
-.wrap{max-width:1400px;margin:0 auto;padding:20px}
+
+/* layout */
+.app{
+  display:grid;
+  grid-template-columns:260px 1fr 320px;
+  height:100vh;
+}
+
+/* sidebar */
+.sidebar{
+  padding:20px;
+  border-right:1px solid var(--border);
+  background:rgba(0,0,0,0.25);
+  backdrop-filter: blur(12px);
+}
+
+.brand{
+  font-size:20px;
+  font-weight:800;
+  margin-bottom:18px;
+}
+
+.navbtn{
+  width:100%;
+  padding:12px;
+  margin:6px 0;
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:var(--panel);
+  color:var(--text);
+  cursor:pointer;
+  transition:.2s;
+}
+
+.navbtn:hover{
+  transform:translateY(-1px);
+  border-color:rgba(124,92,255,0.5);
+}
+
+.sectionTitle{
+  margin:18px 0 8px;
+  font-size:12px;
+  color:var(--muted);
+  letter-spacing:0.12em;
+}
+
+/* main */
+.main{
+  padding:20px;
+  overflow:auto;
+}
+
 .topbar{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  border:1px solid var(--line);background:var(--panel);border-radius:24px;padding:16px 18px;
-  position:sticky;top:12px;z-index:30;backdrop-filter:blur(12px)
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:16px;
 }
-.brand{display:flex;align-items:center;gap:12px}
-.logo{
-  width:42px;height:42px;border-radius:14px;background:var(--accent);color:var(--accentText);
-  display:grid;place-items:center;font-weight:900
+
+.title{
+  font-size:22px;
+  font-weight:800;
 }
-.title h1{margin:0;font-size:18px;line-height:1}
-.title p{margin:3px 0 0;color:var(--muted);font-size:12px}
-.actions{display:flex;gap:10px;flex-wrap:wrap}
-.btn{
-  border:1px solid var(--line);background:var(--panel2);color:var(--text);
-  padding:11px 14px;border-radius:14px;cursor:pointer
+
+.actions button{
+  margin-left:8px;
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:var(--panel);
+  color:var(--text);
+  cursor:pointer;
 }
-.btn.primary{background:var(--accent);color:var(--accentText);font-weight:700}
+
+.primary{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border:none;
+}
+
+/* editor */
 .grid{
-  display:grid;grid-template-columns:300px 1fr 340px;gap:18px;margin-top:18px
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
 }
-.card{
-  background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:16px
+
+.tabs{
+  display:flex;
+  gap:8px;
 }
-.card h2,.card h3{margin:0 0 12px}
-.muted{color:var(--muted)}
-.field{display:grid;gap:8px;margin-bottom:12px}
-.field label{font-size:13px;color:var(--muted)}
-.field input,.field textarea{
-  width:100%;border:1px solid var(--line);border-radius:16px;background:var(--panel2);
-  color:var(--text);padding:12px
+
+.tab{
+  padding:8px 12px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:var(--panel);
+  cursor:pointer;
 }
-.field textarea{min-height:120px;resize:vertical}
-.row{display:flex;gap:10px;flex-wrap:wrap}
-.small{padding:9px 12px;border-radius:12px}
-.list{display:grid;gap:10px}
-.siteItem{
-  border:1px solid var(--line);background:var(--panel2);border-radius:16px;padding:12px;cursor:pointer
+
+.tab.active{
+  background:rgba(124,92,255,0.25);
+  border-color:rgba(124,92,255,0.6);
 }
-.siteItem.active{outline:2px solid var(--accent)}
-.siteItem .top{display:flex;justify-content:space-between;gap:10px}
-.badge{background:var(--chip);color:var(--text);padding:5px 8px;border-radius:999px;font-size:12px}
-.editorTabs{display:flex;gap:8px;margin-bottom:10px}
-.tab{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);cursor:pointer}
-.tab.active{background:var(--accent);color:var(--accentText);font-weight:700}
-.editor{
-  min-height:240px;width:100%;border:1px solid var(--line);border-radius:18px;background:var(--panel2);
-  color:var(--text);padding:14px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace
+
+textarea{
+  width:100%;
+  height:220px;
+  padding:14px;
+  border-radius:16px;
+  border:1px solid var(--border);
+  background:var(--panel);
+  color:var(--text);
+  outline:none;
+  resize:none;
+  font-family:monospace;
 }
+
 .preview{
-  width:100%;height:540px;border:1px solid var(--line);border-radius:20px;background:white
+  margin-top:12px;
+  height:320px;
+  border-radius:18px;
+  border:1px solid var(--border);
+  overflow:hidden;
+  box-shadow:var(--shadow);
 }
-.previewFrame{
-  width:100%;height:100%;border:0;border-radius:20px;background:white
+
+iframe{
+  width:100%;
+  height:100%;
+  border:none;
+  background:white;
 }
-.dropzone{
-  border:1.5px dashed var(--line);border-radius:18px;padding:14px;text-align:center;background:var(--panel2);
+
+/* right panel */
+.right{
+  border-left:1px solid var(--border);
+  padding:20px;
+  background:rgba(0,0,0,0.2);
+  backdrop-filter: blur(12px);
 }
-.blocks{
-  display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  padding:14px;
+  border-radius:16px;
+  margin-bottom:12px;
 }
-.block{
-  border:1px solid var(--line);background:var(--panel2);padding:10px;border-radius:14px;cursor:grab;
-  user-select:none;text-align:center
+
+.small{
+  color:var(--muted);
+  font-size:12px;
 }
-.metrics{
-  display:grid;gap:12px
+
+input{
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:var(--panel);
+  color:var(--text);
+  margin-top:6px;
 }
-.metric{
-  border:1px solid var(--line);background:var(--panel2);border-radius:18px;padding:14px
-}
-.authGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.hidden{display:none !important}
-footer{color:var(--muted);font-size:13px;padding:18px 4px 0}
-@media (max-width:1200px){
-  .grid{grid-template-columns:1fr}
-}
-@media (max-width:760px){
-  .authGrid{grid-template-columns:1fr}
+
+/* responsive */
+@media(max-width:1000px){
+  .app{grid-template-columns:1fr}
+  .sidebar,.right{display:none}
 }
 </style>
 </head>
+
 <body>
-<div class="wrap">
-  <div class="topbar">
-    <div class="brand">
-      <div class="logo">H</div>
-      <div class="title">
-        <h1>Hoster</h1>
-        <p>Build, publish, and host websites</p>
-      </div>
-    </div>
-    <div class="actions">
-      <button class="btn" id="themeBtn">Toggle theme</button>
-      <button class="btn" id="logoutBtn">Logout</button>
-    </div>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">Hoster</div>
+
+    <div class="sectionTitle">NAV</div>
+    <button class="navbtn">Dashboard</button>
+    <button class="navbtn">Sites</button>
+    <button class="navbtn">Deploy</button>
+
+    <div class="sectionTitle">TOOLS</div>
+    <button class="navbtn">Templates</button>
+    <button class="navbtn">AI Builder</button>
+    <button class="navbtn">Analytics</button>
   </div>
 
-  <div class="grid">
-    <aside class="card">
-      <h2>Account</h2>
-      <div id="authBox">
-        <div class="authGrid">
-          <div class="card" style="padding:14px;background:var(--panel2)">
-            <h3>Login</h3>
-            <div class="field">
-              <label>Username</label>
-              <input id="loginUser" placeholder="yourname" />
-            </div>
-            <div class="field">
-              <label>Password</label>
-              <input id="loginPass" type="password" placeholder="••••••••" />
-            </div>
-            <button class="btn primary" id="loginBtn">Login</button>
-          </div>
-          <div class="card" style="padding:14px;background:var(--panel2)">
-            <h3>Register</h3>
-            <div class="field">
-              <label>Username</label>
-              <input id="regUser" placeholder="yourname" />
-            </div>
-            <div class="field">
-              <label>Password</label>
-              <input id="regPass" type="password" placeholder="••••••••" />
-            </div>
-            <button class="btn primary" id="registerBtn">Create account</button>
-          </div>
-        </div>
+  <!-- MAIN -->
+  <div class="main">
+
+    <div class="topbar">
+      <div class="title">Website Editor</div>
+      <div class="actions">
+        <button onclick="save()">Save</button>
+        <button class="primary" onclick="deploy()">Deploy</button>
+      </div>
+    </div>
+
+    <div class="grid">
+
+      <div class="tabs">
+        <button class="tab active" onclick="tab('html')">HTML</button>
+        <button class="tab" onclick="tab('css')">CSS</button>
+        <button class="tab" onclick="tab('js')">JS</button>
       </div>
 
-      <div id="userBox" class="hidden">
-        <p class="muted" style="margin-top:0">Signed in as</p>
-        <h3 id="whoami" style="margin-top:-4px"></h3>
+      <textarea id="html"></textarea>
+      <textarea id="css" style="display:none"></textarea>
+      <textarea id="js" style="display:none"></textarea>
+
+      <div class="preview">
+        <iframe id="preview"></iframe>
       </div>
 
-      <hr style="border:none;border-top:1px solid var(--line);margin:16px 0">
+    </div>
 
-      <h2>Your sites</h2>
-      <div class="list" id="siteList"></div>
-
-      <hr style="border:none;border-top:1px solid var(--line);margin:16px 0">
-
-      <h2>New site</h2>
-      <div class="field">
-        <label>Title</label>
-        <input id="newTitle" placeholder="My cool site" />
-      </div>
-      <div class="field">
-        <label>Slug</label>
-        <input id="newSlug" placeholder="my-site" />
-      </div>
-      <button class="btn primary" id="createBtn">Create site</button>
-    </aside>
-
-    <main class="card">
-      <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px">
-        <div>
-          <h2 id="currentTitle" style="margin-bottom:4px">Open or create a site</h2>
-          <div class="muted" id="currentSlug">Nothing selected</div>
-        </div>
-        <div class="row">
-          <button class="btn small" id="templateBtn">Templates</button>
-          <button class="btn small" id="aiBtn">AI generator</button>
-          <button class="btn small" id="saveBtn">Save</button>
-          <button class="btn primary small" id="deployBtn">Deploy</button>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Custom domain</label>
-        <input id="customDomain" placeholder="www.yourdomain.com" />
-      </div>
-
-      <div class="editorTabs">
-        <button class="tab active" data-tab="html">HTML</button>
-        <button class="tab" data-tab="css">CSS</button>
-        <button class="tab" data-tab="js">JS</button>
-      </div>
-
-      <textarea id="html" class="editor" spellcheck="false"></textarea>
-      <textarea id="css" class="editor hidden" spellcheck="false"></textarea>
-      <textarea id="js" class="editor hidden" spellcheck="false"></textarea>
-
-      <div style="margin-top:14px" class="row">
-        <button class="btn small" id="useCanvasBtn">Use drag-and-drop canvas</button>
-        <label class="btn small" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer">
-          Upload file
-          <input id="fileInput" type="file" hidden />
-        </label>
-      </div>
-
-      <div class="dropzone" id="dropzone" style="margin-top:12px">
-        Drag blocks here to build a page
-      </div>
-
-      <div class="blocks">
-        <div class="block" draggable="true" data-snippet="<section style='padding:64px'><h1>Big headline</h1><p>Your subtitle</p><button>Get started</button></section>">Hero</div>
-        <div class="block" draggable="true" data-snippet="<section style='padding:32px;border:1px solid #ddd;border-radius:20px'>Card</section>">Card</div>
-        <div class="block" draggable="true" data-snippet="<nav style='padding:20px;display:flex;gap:16px'>Logo <a href='#'>Home</a> <a href='#'>About</a></nav>">Nav</div>
-        <div class="block" draggable="true" data-snippet="<section style='padding:48px'><h2>Features</h2><ul><li>Fast</li><li>Modern</li><li>Easy</li></ul></section>">List</div>
-      </div>
-
-      <div class="preview" style="margin-top:14px">
-        <iframe id="previewFrame" class="previewFrame"></iframe>
-      </div>
-    </main>
-
-    <aside class="card">
-      <h2>Analytics</h2>
-      <div class="metrics">
-        <div class="metric"><div class="muted">Views</div><div id="views" style="font-size:28px;font-weight:800">0</div></div>
-        <div class="metric"><div class="muted">Published URL</div><div id="pubUrl" style="word-break:break-word">—</div></div>
-        <div class="metric"><div class="muted">Domains</div><div id="domains">—</div></div>
-      </div>
-
-      <hr style="border:none;border-top:1px solid var(--line);margin:16px 0">
-
-      <h2>Templates</h2>
-      <div class="row">
-        <button class="btn small" data-template="portfolio">Portfolio</button>
-        <button class="btn small" data-template="store">Store</button>
-        <button class="btn small" data-template="blog">Blog</button>
-      </div>
-
-      <footer>
-        Hoster. One-file builder, preview, deploy, and subdomain hosting.
-      </footer>
-    </aside>
   </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+
+    <div class="card">
+      <div class="small">Site Name</div>
+      <input id="name" placeholder="my-site" />
+    </div>
+
+    <div class="card">
+      <div class="small">Deploy URL</div>
+      <div id="url">not deployed</div>
+    </div>
+
+    <div class="card">
+      <div class="small">Status</div>
+      <div>Ready</div>
+    </div>
+
+  </div>
+
 </div>
 
 <script>
-const $ = (id) => document.getElementById(id);
-const state = {
-  me: null,
-  sites: [],
-  current: null,
-  tab: "html",
-  theme: localStorage.getItem("hoster-theme") || "dark",
-};
 
-const previewFrame = $("previewFrame");
-const htmlEl = $("html");
-const cssEl = $("css");
-const jsEl = $("js");
+const html = document.getElementById("html");
+const css = document.getElementById("css");
+const js = document.getElementById("js");
+const preview = document.getElementById("preview");
 
-function setTheme(theme) {
-  state.theme = theme;
-  document.documentElement.classList.toggle("light", theme === "light");
-  localStorage.setItem("hoster-theme", theme);
+html.value = "<h1>Hello Hoster</h1>";
+css.value = "body{font-family:Arial;text-align:center;padding:40px;}";
+js.value = "";
+
+function render(){
+  preview.srcdoc = `
+  <style>${css.value}</style>
+  ${html.value}
+  <script>${js.value}<\/script>
+  `;
 }
 
-function api(url, options = {}) {
-  return fetch(url, {
-    headers: { "Content-Type": "application/json", ...(options.headers || {}) },
-    credentials: "include",
-    ...options,
-  }).then(async (r) => {
-    const data = await r.json().catch(() => ({}));
-    if (!r.ok) throw new Error(data.error || "Request failed");
-    return data;
-  });
+html.oninput = css.oninput = js.oninput = render;
+
+function tab(t){
+  html.style.display = t==="html"?"block":"none";
+  css.style.display = t==="css"?"block":"none";
+  js.style.display = t==="js"?"block":"none";
 }
 
-function buildPreview() {
-  const css = cssEl.value || "";
-  const html = htmlEl.value || "";
-  const js = jsEl.value || "";
-  previewFrame.srcdoc = `<!doctype html>
-<html>
-<head><meta charset="utf-8"><style>${css}</style></head>
-<body>${html}<script>${js}<\/script></body>
-</html>`;
+function save(){
+  alert("Saved (demo)");
 }
 
-function syncCanvasToHtml() {
-  const canvas = $("dropzone");
-  const inner = canvas.dataset.html || "";
-  if (inner) {
-    htmlEl.value = inner;
-    buildPreview();
-  }
+function deploy(){
+  const name = document.getElementById("name").value || "site";
+  document.getElementById("url").innerText =
+    `https://hoster-cc84.onrender.com/view/${name}`;
+  alert("Deployed!");
 }
 
-function setTab(tab) {
-  state.tab = tab;
-  document.querySelectorAll(".tab").forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
-  htmlEl.classList.toggle("hidden", tab !== "html");
-  cssEl.classList.toggle("hidden", tab !== "css");
-  jsEl.classList.toggle("hidden", tab !== "js");
-}
+render();
 
-function setCurrent(site) {
-  state.current = site;
-  if (!site) return;
-  $("currentTitle").textContent = site.title;
-  $("currentSlug").textContent = site.slug;
-  htmlEl.value = site.html || "";
-  cssEl.value = site.css || "";
-  jsEl.value = site.js || "";
-  $("customDomain").value = (site.domains && site.domains[0]) ? site.domains[0] : "";
-  renderAnalytics();
-  buildPreview();
-  renderSites();
-}
-
-function renderSites() {
-  const list = $("siteList");
-  list.innerHTML = "";
-  if (!state.sites.length) {
-    list.innerHTML = `<div class="muted">No sites yet.</div>`;
-    return;
-  }
-  state.sites.forEach((site) => {
-    const item = document.createElement("div");
-    item.className = "siteItem" + (state.current && state.current.slug === site.slug ? " active" : "");
-    item.innerHTML = \`
-      <div class="top">
-        <strong>\${site.title}</strong>
-        <span class="badge">\${site.views} views</span>
-      </div>
-      <div class="muted" style="margin-top:6px">\${site.slug}</div>
-      <div class="muted" style="margin-top:6px;font-size:12px">\${(site.domains || []).join(", ") || "No domain"}</div>
-    \`;
-    item.onclick = () => loadSite(site.slug);
-    list.appendChild(item);
-  });
-}
-
-async function renderAnalytics() {
-  if (!state.current) {
-    $("views").textContent = "0";
-    $("domains").textContent = "—";
-    $("pubUrl").textContent = "—";
-    return;
-  }
-  const data = await api(`/api/sites/${state.current.slug}/analytics`);
-  $("views").textContent = data.views ?? 0;
-  $("domains").textContent = (data.domains && data.domains.length) ? data.domains.join(", ") : "—";
-  $("pubUrl").textContent = state.current.slug + ".hoster.localhost";
-}
-
-async function refreshMe() {
-  const data = await fetch("/api/me", { credentials: "include" }).then((r) => r.json());
-  state.me = data.user;
-  $("authBox").classList.toggle("hidden", !!state.me);
-  $("userBox").classList.toggle("hidden", !state.me);
-  $("logoutBtn").classList.toggle("hidden", !state.me);
-  $("whoami").textContent = state.me ? state.me.username : "";
-  if (state.me) {
-    await refreshSites();
-  } else {
-    state.sites = [];
-    state.current = null;
-    renderSites();
-    renderAnalytics();
-  }
-}
-
-async function refreshSites() {
-  const data = await api("/api/sites");
-  state.sites = data.sites || [];
-  renderSites();
-  if (!state.current && state.sites.length) {
-    await loadSite(state.sites[0].slug);
-  }
-}
-
-async function loadSite(slug) {
-  const data = await api(`/api/sites/${slug}`);
-  state.current = data.site;
-  setCurrent(data.site);
-}
-
-async function login() {
-  await api("/api/login", {
-    method: "POST",
-    body: JSON.stringify({
-      username: $("loginUser").value,
-      password: $("loginPass").value,
-    }),
-  });
-  await refreshMe();
-}
-
-async function register() {
-  await api("/api/register", {
-    method: "POST",
-    body: JSON.stringify({
-      username: $("regUser").value,
-      password: $("regPass").value,
-    }),
-  });
-  await refreshMe();
-}
-
-async function logout() {
-  await api("/api/logout", { method: "POST", body: "{}" });
-  await refreshMe();
-}
-
-async function createSite() {
-  if (!state.me) return alert("Please log in first.");
-  const title = $("newTitle").value.trim() || "Untitled Site";
-  const slug = $("newSlug").value.trim() || title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-  const data = await api("/api/sites", {
-    method: "POST",
-    body: JSON.stringify({
-      title,
-      slug,
-      html: "<main class=\\"wrap\\"><h1>Hello from Hoster</h1><p>Edit this site and hit Save.</p></main>",
-      css: "body{font-family:system-ui;background:#0b0b10;color:#fff;margin:0}.wrap{padding:48px}",
-      js: "",
-    }),
-  });
-  await refreshSites();
-  await loadSite(data.site.slug);
-}
-
-async function saveSite() {
-  if (!state.current) return alert("Select a site first.");
-  await api(`/api/sites/${state.current.slug}`, {
-    method: "PUT",
-    body: JSON.stringify({
-      title: $("currentTitle").textContent,
-      html: htmlEl.value,
-      css: cssEl.value,
-      js: jsEl.value,
-    }),
-  });
-  await refreshSites();
-  await loadSite(state.current.slug);
-}
-
-async function deploySite() {
-  if (!state.current) return alert("Select a site first.");
-  const domain = $("customDomain").value.trim();
-  const data = await api(`/api/sites/${state.current.slug}/deploy`, {
-    method: "POST",
-    body: JSON.stringify({ domain }),
-  });
-  $("pubUrl").textContent = data.subdomain;
-  await refreshSites();
-}
-
-function loadTemplate(name) {
-  if (name === "portfolio") {
-    htmlEl.value = \`
-<main class="page">
-  <section class="hero">
-    <p class="eyebrow">Portfolio</p>
-    <h1>Designer / Developer</h1>
-    <p>Building clean websites and tools.</p>
-    <a class="btn" href="#work">See work</a>
-  </section>
-  <section id="work" class="grid">
-    <article class="card">Project One</article>
-    <article class="card">Project Two</article>
-    <article class="card">Project Three</article>
-  </section>
-</main>\`;
-    cssEl.value = \`
-body{margin:0;font-family:system-ui;background:#0b0b10;color:#fff}
-.page{padding:56px;max-width:1100px;margin:0 auto}
-.hero{padding:72px 0}
-.eyebrow{color:#a7a7b6;text-transform:uppercase;letter-spacing:.15em;font-size:12px}
-h1{font-size:64px;line-height:1;margin:12px 0}
-.btn{display:inline-block;background:#fff;color:#0b0b10;padding:12px 18px;border-radius:14px;text-decoration:none;font-weight:700}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.card{background:#171722;border:1px solid #262637;border-radius:20px;padding:20px;min-height:120px}
-@media (max-width:900px){.grid{grid-template-columns:1fr}h1{font-size:42px}}\`;
-    jsEl.value = "";
-  }
-  if (name === "store") {
-    htmlEl.value = \`
-<main class="page">
-  <header class="top">
-    <h1>Hoster Store</h1>
-    <button class="btn">Cart</button>
-  </header>
-  <section class="products">
-    <div class="product">Product A</div>
-    <div class="product">Product B</div>
-    <div class="product">Product C</div>
-  </section>
-</main>\`;
-    cssEl.value = \`
-body{margin:0;font-family:system-ui;background:#0b0b10;color:#fff}
-.page{padding:40px;max-width:1100px;margin:0 auto}
-.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
-.products{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.product{background:#171722;border:1px solid #262637;border-radius:20px;padding:24px;min-height:180px}
-.btn{background:#fff;color:#0b0b10;border:none;padding:12px 18px;border-radius:14px;font-weight:700}
-@media (max-width:900px){.products{grid-template-columns:1fr}}\`;
-    jsEl.value = "";
-  }
-  if (name === "blog") {
-    htmlEl.value = \`
-<main class="page">
-  <article class="post">
-    <p class="eyebrow">Blog</p>
-    <h1>My first post</h1>
-    <p>Write your thoughts here.</p>
-  </article>
-</main>\`;
-    cssEl.value = \`
-body{margin:0;font-family:system-ui;background:#0b0b10;color:#fff}
-.page{padding:48px;max-width:800px;margin:0 auto}
-.post{background:#171722;border:1px solid #262637;border-radius:24px;padding:32px}
-.eyebrow{color:#a7a7b6;text-transform:uppercase;letter-spacing:.15em;font-size:12px}\`;
-    jsEl.value = "";
-  }
-  buildPreview();
-}
-
-function aiGenerate() {
-  const prompt = prompt("Describe the website:");
-  if (!prompt) return;
-  htmlEl.value = \`
-<main class="page">
-  <section class="hero">
-    <h1>\${prompt}</h1>
-    <p>AI-generated starter layout for your Hoster site.</p>
-    <button class="btn">Get started</button>
-  </section>
-</main>\`;
-  cssEl.value = \`
-body{margin:0;font-family:system-ui;background:#0b0b10;color:#fff}
-.page{padding:56px;max-width:1000px;margin:0 auto}
-.hero{padding:72px;background:#171722;border:1px solid #262637;border-radius:28px}
-h1{font-size:56px;line-height:1.02;margin:0 0 14px}
-.btn{background:#fff;color:#0b0b10;border:none;padding:12px 18px;border-radius:14px;font-weight:700}
-@media (max-width:800px){h1{font-size:38px}}\`;
-  jsEl.value = "";
-  buildPreview();
-}
-
-function attachDragDrop() {
-  const zone = $("dropzone");
-  zone.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    zone.style.opacity = "0.85";
-  });
-  zone.addEventListener("dragleave", () => {
-    zone.style.opacity = "1";
-  });
-  zone.addEventListener("drop", (e) => {
-    e.preventDefault();
-    zone.style.opacity = "1";
-    const snippet = e.dataTransfer.getData("text/snippet");
-    if (!snippet) return;
-    zone.dataset.html = (zone.dataset.html || "") + snippet;
-    zone.innerHTML = zone.dataset.html;
-  });
-
-  document.querySelectorAll(".block").forEach((block) => {
-    block.addEventListener("dragstart", (e) => {
-      e.dataTransfer.setData("text/snippet", block.dataset.snippet);
-    });
-  });
-}
-
-$("themeBtn").onclick = () => setTheme(state.theme === "dark" ? "light" : "dark");
-$("loginBtn").onclick = () => login().catch((e) => alert(e.message));
-$("registerBtn").onclick = () => register().catch((e) => alert(e.message));
-$("logoutBtn").onclick = () => logout().catch((e) => alert(e.message));
-$("createBtn").onclick = () => createSite().catch((e) => alert(e.message));
-$("saveBtn").onclick = () => saveSite().catch((e) => alert(e.message));
-$("deployBtn").onclick = () => deploySite().catch((e) => alert(e.message));
-$("templateBtn").onclick = () => {
-  const choice = prompt("Template: portfolio, store, blog");
-  if (choice) loadTemplate(choice.toLowerCase().trim());
-};
-$("aiBtn").onclick = () => aiGenerate();
-$("useCanvasBtn").onclick = () => syncCanvasToHtml();
-$("fileInput").onchange = () => {
-  const file = $("fileInput").files && $("fileInput").files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    const data = reader.result;
-    if (file.type.startsWith("image/")) {
-      htmlEl.value += `\\n<img src="\${data}" alt="\${file.name}" style="max-width:100%;border-radius:16px" />`;
-    } else {
-      htmlEl.value += `\\n<a download="\${file.name}" href="\${data}">\${file.name}</a>`;
-    }
-    buildPreview();
-  };
-  reader.readAsDataURL(file);
-};
-
-document.querySelectorAll(".tab").forEach((btn) => {
-  btn.onclick = () => setTab(btn.dataset.tab);
-});
-
-[htmlEl, cssEl, jsEl].forEach((el) => el.addEventListener("input", buildPreview));
-
-attachDragDrop();
-setTheme(state.theme);
-$("logoutBtn").classList.add("hidden");
-
-refreshMe().catch(() => {});
-buildPreview();
 </script>
+
 </body>
 </html>
